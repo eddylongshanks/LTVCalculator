@@ -1,4 +1,4 @@
-# LTV Calculator v1.0
+## LTV Calculator v1.0
 
 Accepts the following two values as JSON:
 
