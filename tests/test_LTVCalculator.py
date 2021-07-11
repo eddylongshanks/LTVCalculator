@@ -4,11 +4,6 @@
 import pytest
 from LTVCalculator import LTVCalculator
 
-# max ltv as string
-# loan amount as string
-# prop value as string
-
-
 class TestValidationMaxLtv:
     def test_max_ltv_AsString_ThrowsTypeErrorException(self):
         """ max_ltv as string throws TypeError Exception """
