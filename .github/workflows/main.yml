@@ -19,9 +19,6 @@ jobs:
           pip install -r requirements.txt
         env:
           CI: true
-      - name: Test with pytest
-        run: |
-          pytest
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
