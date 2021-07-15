@@ -31,10 +31,10 @@ jobs:
       with:
         args: zip -qq -r ./bundle.zip lambda_function.py LTVCalculator.py
     - name: Deploy
-      uses: appleboy/lambda-action@master
+      uses: aws-actions/configure-aws-credentials@v1
       with:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws_region: eu-west-2
-        function_name: cetm67_ass2-ltvcalculator
-        zip_file: bundle.zip
+    - name: Deploy to Lambda
+      run: aws lambda update-function-code --function-name cetm67_ass2-ltvcalculator --zip-file bundle.zip
