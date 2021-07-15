@@ -5,8 +5,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     name: Build and Upload
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -38,7 +38,6 @@ jobs:
     needs: build
 
     steps:
-
     - name: Check out code
       uses: actions/checkout@v1
 
@@ -61,7 +60,6 @@ jobs:
     needs: build
 
     steps:
-
     - name: Check out code
       uses: actions/checkout@v1
 
@@ -85,7 +83,6 @@ jobs:
     needs: build
 
     steps:
-
     - name: Check out code
       uses: actions/checkout@v1
 
