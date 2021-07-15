@@ -2,8 +2,6 @@ name: Deploy to AWS Lambda
 on:
   push: 
     branches: [ main ]
-  merge:
-    branches: [ main ]
 
 jobs:
   deploy:
