@@ -1,4 +1,4 @@
-name: CI Test
+name: CI
 on:
   push: 
     branches: [ main ]
@@ -6,9 +6,9 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  integration:
     runs-on: ubuntu-latest
-    name: Run PyTest
+    name: Integration Checks
 
     strategy:
       matrix:
@@ -28,9 +28,9 @@ jobs:
         pip install -r requirements.txt
       env:
         CI: true
-    - name: Test with pytest
+    - name: Run Tests (PyTest)
       run: pytest
     - name: Safety Check
       run: safety check
-    - name: Run Bandit (Excluding Unit Tests)
+    - name: Bandit Code Vulnerability Check (Excluding Unit Tests)
       run: bandit -r . -x ./test/
