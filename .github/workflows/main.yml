@@ -37,4 +37,4 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-2
     - name: Deploy to Lambda
-      run: aws lambda update-function-code --function-name cetm67_ass2-ltvcalculator --zip-file bundle.zip
+      run: aws lambda update-function-code --function-name cetm67_ass2-ltvcalculator --zip-file fileb://bundle.zip
