@@ -1,5 +1,6 @@
 """ LTV Calculator v1.1 """
 
+
 class LTVCalculator():
     """ Calculates the LTV value when given Loan Amount and Property Value """
 
