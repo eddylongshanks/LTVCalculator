@@ -30,7 +30,7 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: code
-        path: ./source
+        path: ${{ github.workspace }}
 
   Tests:
     name: Run Tests
