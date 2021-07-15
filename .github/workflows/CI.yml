@@ -75,7 +75,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Safety Check
-      run: safety check
+      run: safety check -r requirements.txt
 
   Bandit:
     name: Bandit Code Vulnerability Check
