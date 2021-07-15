@@ -32,5 +32,5 @@ jobs:
       run: pytest
     - name: Safety Check
       run: safety check
-    - name: Run Bandit
-      run: bandit -r .
+    - name: Run Bandit (Excluding Unit Tests)
+      run: bandit -r . -x ./test/
