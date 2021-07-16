@@ -1,17 +1,21 @@
-name: Deploy to AWS Lambda
+# Environment based workflow
 
-on:
-  push: 
-    branches: [ main ]
+name: Deploy to AWS Lambda (dev)
+# on:
+#   push: 
+#     branches: [ develop ]
 
 jobs:
   deploy:
-    name: Deploy to Lambda
+    name: Deploy to Lambda (dev)
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         python-version: [3.8]
+
+    environment:
+      name: dev
 
     steps:
     - name: Checkout Code
@@ -43,4 +47,4 @@ jobs:
         aws-region: eu-west-2
 
     - name: Deploy to Lambda
-      run: aws lambda update-function-code --function-name cetm67_ass2-ltvcalculator --zip-file fileb://bundle.zip
+      run: aws lambda update-function-code --function-name ${{ secrets.FUNCTION_NAME }} --zip-file fileb://bundle.zip
