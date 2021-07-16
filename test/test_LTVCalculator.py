@@ -11,7 +11,7 @@ class TestValidationMaxLtv:
         # Arrange
         loan_amount = 50
         property_value = 100
-        max_ltv = "NaN"
+        max_ltv = "testtext"
 
         # Act
         with pytest.raises(TypeError) as te:
@@ -83,7 +83,7 @@ class TestValidationLoanAmount:
     def test_loan_amount_AsString_ThrowsTypeErrorException(self):
         """ loan_amount as string throws TypeError Exception """
         # Arrange
-        loan_amount = "NaN"
+        loan_amount = "testtext"
         property_value = 100
         max_ltv = 80
 
@@ -143,7 +143,7 @@ class TestValidationPropertyValue:
         """ property_value as string throws TypeError Exception """
         # Arrange
         loan_amount = 100
-        property_value = "NaN"
+        property_value = "testtext"
         max_ltv = 80
 
         # Act

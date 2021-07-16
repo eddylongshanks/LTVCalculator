@@ -9,10 +9,9 @@ def lambda_handler(event, context):
     """ Instantiate calculator and return values in a response object """
 
     try:
-        loan_amount = float(event['loan_amount'])
-        property_value = float(event['property_value'])
-        
-        max_ltv = float(MAX_LTV)
+        loan_amount = float_conversion(event['loan_amount'])
+        property_value = float_conversion(event['property_value'])
+        max_ltv = float_conversion(MAX_LTV)
 
         ltv_calculator = LTVCalculator(loan_amount, property_value, max_ltv)
 
@@ -34,3 +33,8 @@ def lambda_handler(event, context):
             "body": str(e)
         }
 
+def float_conversion(value):
+    try:
+        return float(value)
+    except:
+        raise TypeError(f"The provided value: '{value}', must be convertible to a number")
