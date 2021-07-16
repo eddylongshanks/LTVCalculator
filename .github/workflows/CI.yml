@@ -1,3 +1,6 @@
+variables:
+  testdir: './test/'
+
 name: CI
 on:
   pull_request:
@@ -99,4 +102,4 @@ jobs:
         pip install -r requirements.txt
 
     - name: Bandit Code Vulnerability Check (Excluding Unit Tests)
-      run: bandit -r . -x ./test/
+      run: bandit -r . -x ${{ testdir }}
