@@ -3,18 +3,21 @@
 import os
 import pytest
 import lambda_function
+from unittest import mock
 
 class TestFloatConversion:
+    """ Tests for the float_conversion function """
+
     def test_float_conversion_WithTextString_ThrowsTypeErrorException(self):
         """ Text String """
 
         # Arrange
         test_value = "testtext"
-        
+
         # Act
         with pytest.raises(TypeError) as te:
             result = lambda_function.float_conversion(test_value)
-        
+
         # Assert
         assert str(te.value) == "The provided value: 'testtext', must be convertible to a number"
 
@@ -23,11 +26,11 @@ class TestFloatConversion:
 
         # Arrange
         test_value = None
-        
+
         # Act
         with pytest.raises(TypeError) as te:
             result = lambda_function.float_conversion(test_value)
-        
+
         # Assert
         assert str(te.value) == "The provided value: 'None', must be convertible to a number"
 
@@ -36,10 +39,10 @@ class TestFloatConversion:
 
         # Arrange
         test_value = float(45.5)
-        
+
         # Act
         result = lambda_function.float_conversion(test_value)
-        
+
         # Assert
         assert type(result) is float
 
@@ -48,10 +51,10 @@ class TestFloatConversion:
 
         # Arrange
         test_value = int(45)
-        
+
         # Act
         result = lambda_function.float_conversion(test_value)
-        
+
         # Assert
         assert type(result) is float
 
@@ -60,9 +63,153 @@ class TestFloatConversion:
 
         # Arrange
         test_value = "55"
-        
+
         # Act
         result = lambda_function.float_conversion(test_value)
-        
+
         # Assert
         assert type(result) is float
+
+
+class TestGetMaxLTV:
+    """ Tests for get_maxltv function """
+
+    @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
+    def test_get_maxltv_WithValue_ReturnsValidResponse(self):
+        """ Valid value set in environment (mocked) """
+
+        # Act
+        result = lambda_function.get_maxltv()
+
+        # Assert
+        assert result == "80"
+    
+    @mock.patch.dict(os.environ, clear=True)
+    def test_get_maxltv_WithNoValue_ThrowsValueErrorException(self):
+        """ No environment value set """
+
+        # Act
+        with pytest.raises(ValueError) as te:
+            result = lambda_function.get_maxltv()
+
+        # Assert
+        assert str(te.value) == "MAX_LTV environment variable does not exist"
+
+
+# valid input
+# bad loan amount
+# bad property value
+# bad max ltv
+
+class TestLambdaFunction:
+    """ Tests for the lambda_handler function """
+
+    @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
+    def test_lambda_function_WithValidInputs_ReturnsValidResponse(self):
+        """ valid with mocked env variable """
+
+        # Arrange
+        event = {
+            "loan_amount": 40000, 
+            "property_value": 100000
+        }
+        context = 1
+        expected = {
+            'statusCode': 200,
+            'body': {
+                'ltv_percentage': 40.0, 
+                'is_acceptable': True
+            }
+        }
+
+        # Act
+        result = lambda_function.lambda_handler(event, context)
+
+        # Assert
+        assert result == expected
+
+    @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
+    def test_lambda_function_WithStringLoanAmount_ReturnsBadRequestWithInformativeErrorMessage(self):
+        """ Invalid loan_amount value """
+
+        # Arrange
+        event = {
+            "loan_amount": "invalid_loan_amount", 
+            "property_value": 100000
+        }
+        context = 1
+        expected = {
+            'statusCode': 400,
+            'body': "The provided value: 'invalid_loan_amount', must be convertible to a number"
+        }
+
+        # Act
+        result = lambda_function.lambda_handler(event, context)
+
+        # Assert
+        assert result == expected
+
+    @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
+    def test_lambda_function_WithStringPropertyValue_ReturnsBadRequestWithInformativeErrorMessage(self):
+        """ Invalid property_value value """
+
+        # Arrange
+        event = {
+            "loan_amount": 40000, 
+            "property_value": "invalid_property_value"
+        }
+        context = 1
+        expected = {
+            'statusCode': 400,
+            'body': "The provided value: 'invalid_property_value', must be convertible to a number"
+        }
+
+        # Act
+        result = lambda_function.lambda_handler(event, context)
+
+        # Assert
+        assert result == expected
+
+    @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
+    def test_lambda_function_WithNoLoanAmount_ReturnsBadRequestWithInformativeErrorMessage(self):
+        """ Invalid loan_amount value """
+
+        # Arrange
+        event = {
+            "property_value": 100000
+        }
+        context = 1
+        expected = {
+            'statusCode': 400,
+            'body': "'loan_amount'"
+        }
+
+        # Act
+        result = lambda_function.lambda_handler(event, context)
+
+        # Assert
+        assert result == expected
+
+    @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
+    def test_lambda_function_WithAboveMaxLtv_ReturnsOkResponseWithIsAcceptableFalse(self):
+        """ Result above Max LTV, returns 200, is_acceptable is False """
+
+        # Arrange
+        event = {
+            "loan_amount": 90000, 
+            "property_value": 100000
+        }
+        context = 1
+        expected = {
+            'statusCode': 200,
+            'body': {
+                'ltv_percentage': 90.0, 
+                'is_acceptable': False
+            }
+        }
+
+        # Act
+        result = lambda_function.lambda_handler(event, context)
+
+        # Assert
+        assert result == expected
