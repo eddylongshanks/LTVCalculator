@@ -4,9 +4,6 @@ on:
   push: 
     branches: [ develop ]
 
-environment:
-  name: dev
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,6 +12,9 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
+
+    environment:
+      name: dev
 
     steps:
     - name: Checkout Code
