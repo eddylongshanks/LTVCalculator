@@ -1,13 +1,14 @@
-name: Deploy to AWS Lambda (dev)
+# Environment based workflow
 
-on:
-  push: 
-    branches: [ develop ]
+name: Deploy to AWS Lambda (dev)
+# on:
+#   push: 
+#     branches: [ develop ]
 
 jobs:
   deploy:
+    name: Deploy to Lambda (dev)
     runs-on: ubuntu-latest
-    name: Build and Deploy Lambda
 
     strategy:
       matrix:

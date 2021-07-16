@@ -1,40 +1,46 @@
 name: Deploy to AWS Lambda
+
 on:
   push: 
     branches: [ main ]
 
 jobs:
   deploy:
+    name: Deploy to Lambda
     runs-on: ubuntu-latest
-    name: Build and Deploy Lambda
 
     strategy:
       matrix:
         python-version: [3.8]
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install Requirements
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-      env:
-        CI: true
+
     - name: Test with pytest
       run: pytest
+
     - name: Create Zip file
       uses: montudor/action-zip@v0.1.0
       with:
         args: zip -qq -r ./bundle.zip lambda_function.py LTVCalculator.py
+
     - name: Deploy
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-2
+
     - name: Deploy to Lambda
       run: aws lambda update-function-code --function-name cetm67_ass2-ltvcalculator --zip-file fileb://bundle.zip
