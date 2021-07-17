@@ -7,11 +7,14 @@ def lambda_handler(event, context):
     """ Instantiate calculator and return values in a response object """
 
     try:
-        loan = event['loan_amount']
-        prop = event['property_value']
+        loan_amount_raw = event['loan_amount']
+        property_value_raw = event['property_value']
+    except Exception as e:
+        return response_object(400, f"Missing value: {str(e)}")
 
-        loan_amount = float_conversion(loan)
-        property_value = float_conversion(prop)
+    try:
+        loan_amount = float_conversion(loan_amount_raw)
+        property_value = float_conversion(property_value_raw)
         max_ltv = float_conversion(get_maxltv())
 
         ltv_calculator = LTVCalculator(loan_amount, property_value, max_ltv)
@@ -25,7 +28,6 @@ def lambda_handler(event, context):
         }
 
         return response_object(200, data)
-
     except Exception as e:
         return response_object(400, str(e))
 
