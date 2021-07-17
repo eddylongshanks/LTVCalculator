@@ -5,21 +5,8 @@ import pytest
 from LTVCalculator import LTVCalculator
 
 class TestValidationMaxLtv:
-    def test_max_ltv_AsString_ThrowsTypeErrorException(self):
-        """ max_ltv as string throws TypeError Exception """
+    """ Validation tests for max_ltv value """
 
-        # Arrange
-        loan_amount = 50
-        property_value = 100
-        max_ltv = "NaN"
-
-        # Act
-        with pytest.raises(TypeError) as te:
-            calc = LTVCalculator(loan_amount, property_value, max_ltv)
-        
-        # Assert
-        assert str(te.value) == "max_ltv must be a number"
-    
     def test_max_ltv_AsFloat_ShouldInstantiateLTVCalculator(self):
         """ max_ltv as float returns an instantiated LTVcalculator """
         
@@ -47,7 +34,22 @@ class TestValidationMaxLtv:
 
         # Assert
         assert isinstance(calc, LTVCalculator)
-    
+
+    def test_max_ltv_AsString_ThrowsTypeErrorException(self):
+        """ max_ltv as string throws TypeError Exception """
+
+        # Arrange
+        loan_amount = 50
+        property_value = 100
+        max_ltv = "testtext"
+
+        # Act
+        with pytest.raises(TypeError) as te:
+            calc = LTVCalculator(loan_amount, property_value, max_ltv)
+        
+        # Assert
+        assert str(te.value) == "max_ltv must be a number"
+
     def test_max_ltv_AboveMaxValue_ThrowsTypeErrorException(self):
         """ max_ltv above max configured value throws TypeError Exception """
         
@@ -80,10 +82,12 @@ class TestValidationMaxLtv:
 
 
 class TestValidationLoanAmount:
+    """ Validation tests for loan_amount value """
+
     def test_loan_amount_AsString_ThrowsTypeErrorException(self):
         """ loan_amount as string throws TypeError Exception """
         # Arrange
-        loan_amount = "NaN"
+        loan_amount = "testtext"
         property_value = 100
         max_ltv = 80
 
@@ -139,11 +143,13 @@ class TestValidationLoanAmount:
 
 
 class TestValidationPropertyValue:
+    """ Validation tests for property_value value """
+
     def test_property_value_AsString_ThrowsTypeErrorException(self):
         """ property_value as string throws TypeError Exception """
         # Arrange
         loan_amount = 100
-        property_value = "NaN"
+        property_value = "testtext"
         max_ltv = 80
 
         # Act
@@ -198,7 +204,9 @@ class TestValidationPropertyValue:
 
 
 class TestFunctionGetValue:
-    def test_get_value_WhenTryingForLTVLowerThanZeroPointOne_WillReturnZero(self):
+    """ tests for get_value function """
+
+    def test_get_value_WhenTryingForLTVLowerThanZeroPointOne_ShouldReturnZero(self):
         """ Test rounding to 1 DP, result of this calculation would be 0.00002 """
 
         # Arrange
@@ -212,7 +220,7 @@ class TestFunctionGetValue:
         # Assert
         assert calc.get_value() == 0.0
     
-    def test_get_value_WhenTryingForLTVHigherThanMaxValue_WillReturnMaxValue(self):
+    def test_get_value_WhenTryingForLTVHigherThanMaxValue_ShouldReturnMaxValue(self):
         """ Tests for the cap of 100% """
 
         # Arrange
@@ -227,7 +235,7 @@ class TestFunctionGetValue:
         # Assert
         assert calc.get_value() == test_ltv_value
 
-    def test_get_value_WithLowerValues_WillReturnLowerLTV(self):
+    def test_get_value_WithLowerValues_ShouldReturnLowerLTV(self):
         """ Tests for 0.1% LTV """
 
         # Arrange
@@ -242,7 +250,7 @@ class TestFunctionGetValue:
         # Assert
         assert calc.get_value() == test_ltv_value
 
-    def test_get_value_WithHigherValues_WillReturnHigherLTV(self):
+    def test_get_value_WithHigherValues_ShouldReturnHigherLTV(self):
         """ Tests for 99.9% LTV """
 
         # Arrange
@@ -257,7 +265,7 @@ class TestFunctionGetValue:
         # Assert
         assert calc.get_value() == test_ltv_value
 
-    def test_get_value_WithStandardValues_WillReturnCorrectLTV(self):
+    def test_get_value_WithStandardValues_ShouldReturnCorrectLTV(self):
         """ Tests for 40% LTV """
 
         # Arrange
@@ -274,7 +282,9 @@ class TestFunctionGetValue:
 
 
 class TestFunctionIsAcceptable:
-    def test_is_acceptable_WithValuesBelowMaxLTV_WillReturnTrue(self):
+    """ tests for is_acceptable function """
+
+    def test_is_acceptable_WithValuesBelowMaxLTV_ShouldReturnTrue(self):
 
         # Arrange
         result = True
@@ -288,7 +298,7 @@ class TestFunctionIsAcceptable:
         # Assert
         assert calc.is_acceptable() == result
     
-    def test_is_acceptable_WithValuesAboveMaxLTV_WillReturnFalse(self):
+    def test_is_acceptable_WithValuesAboveMaxLTV_ShouldReturnFalse(self):
 
         # Arrange
         result = False
@@ -302,7 +312,7 @@ class TestFunctionIsAcceptable:
         # Assert
         assert calc.is_acceptable() == result
     
-    def test_is_acceptable_WithValuesEqualToMaxLTV_WillReturnTrue(self):
+    def test_is_acceptable_WithValuesEqualToMaxLTV_ShouldReturnTrue(self):
 
         # Arrange
         result = True
