@@ -5,7 +5,7 @@ import pytest
 import lambda_function
 from unittest import mock
 
-class TestFloatConversion:
+class TestFunctionFloatConversion:
     """ Tests for the float_conversion function """
 
     def test_float_conversion_WithTextString_ThrowsTypeErrorException(self):
@@ -71,7 +71,7 @@ class TestFloatConversion:
         assert type(result) is float
 
 
-class TestGetMaxLTV:
+class TestFunctionGetMaxLTV:
     """ Tests for get_maxltv function """
 
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
@@ -96,29 +96,34 @@ class TestGetMaxLTV:
         assert str(te.value) == "MAX_LTV environment variable does not exist"
 
 
-# valid input
-# bad loan amount
-# bad property value
-# bad max ltv
-
-class TestLambdaFunction:
+class TestFunctionLambdaHandler:
     """ Tests for the lambda_handler function """
 
-    @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
-    def test_lambda_function_WithValidInputs_ReturnsValidResponse(self):
-        """ valid with mocked env variable """
+    testdata = [
+            (100000, 100000, 100.0, False),
+            (75000, 100000, 75.0, False),
+            (50100, 100000, 50.1, False),
+            (49900, 100000, 49.9, True),
+            (30000, 100000, 30.0, True),
+            (100, 100000, 0.1, True),
+        ]
+
+    @mock.patch.dict(os.environ, {"MAX_LTV": "50"})
+    @pytest.mark.parametrize("loan, prop, ltv, is_acceptable", testdata)
+    def test_WithParameterisedValues_ShouldReturnAppropriateResponse(self, loan, prop, ltv, is_acceptable):
+        """ Parameterised Boundary Test based on max ltv of 50% """
 
         # Arrange
         event = {
-            "loan_amount": 40000, 
-            "property_value": 100000
+            "loan_amount": loan, 
+            "property_value": prop
         }
         context = 1
         expected = {
             'statusCode': 200,
             'body': {
-                'ltv_percentage': 40.0, 
-                'is_acceptable': True
+                'ltv_percentage': ltv, 
+                'is_acceptable': is_acceptable
             }
         }
 
@@ -129,7 +134,7 @@ class TestLambdaFunction:
         assert result == expected
 
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
-    def test_lambda_function_WithStringLoanAmount_ReturnsBadRequestWithInformativeErrorMessage(self):
+    def test_WithStringLoanAmount_ReturnsBadRequestWithInformativeErrorMessage(self):
         """ Invalid loan_amount value """
 
         # Arrange
@@ -150,7 +155,7 @@ class TestLambdaFunction:
         assert result == expected
 
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
-    def test_lambda_function_WithStringPropertyValue_ReturnsBadRequestWithInformativeErrorMessage(self):
+    def test_WithStringPropertyValue_ReturnsBadRequestWithInformativeErrorMessage(self):
         """ Invalid property_value value """
 
         # Arrange
@@ -171,17 +176,17 @@ class TestLambdaFunction:
         assert result == expected
 
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
-    def test_lambda_function_WithNoLoanAmount_ReturnsBadRequestWithInformativeErrorMessage(self):
-        """ Invalid loan_amount value """
+    def test_WithNoLoanAmount_ReturnsBadRequestWithInformativeErrorMessage(self):
+        """ Missing loan_amount value """
 
         # Arrange
         event = {
-            "property_value": 100000
+            "loan_amount": 40000
         }
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "'loan_amount'"
+            'body': "Missing value: 'property_value'"
         }
 
         # Act
@@ -191,21 +196,17 @@ class TestLambdaFunction:
         assert result == expected
 
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
-    def test_lambda_function_WithAboveMaxLtv_ReturnsOkResponseWithIsAcceptableFalse(self):
-        """ Result above Max LTV, returns 200, is_acceptable is False """
+    def test_WithNoPropertyValue_ReturnsBadRequestWithInformativeErrorMessage(self):
+        """ Missing property_value value """
 
         # Arrange
         event = {
-            "loan_amount": 90000, 
             "property_value": 100000
         }
         context = 1
         expected = {
-            'statusCode': 200,
-            'body': {
-                'ltv_percentage': 90.0, 
-                'is_acceptable': False
-            }
+            'statusCode': 400,
+            'body': "Missing value: 'loan_amount'"
         }
 
         # Act
