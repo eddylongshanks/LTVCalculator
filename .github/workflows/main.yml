@@ -6,7 +6,7 @@ on:
 
 jobs:
   deployment:
-    name: Integration Checks
+    name: AWS Lambda Deployment
     runs-on: ubuntu-latest
 
     steps:
