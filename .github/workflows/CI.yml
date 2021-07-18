@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [main, develop]
+    branches: [main]
     types: [opened, reopened]
 
 jobs:
@@ -10,6 +10,7 @@ jobs:
     name: Integration Checks
     runs-on: ubuntu-latest
 
+    # 3.8 used by AWS Lambda, 3.9 as latest
     strategy:
       matrix:
         python-version: [3.8, 3.9]
