@@ -145,7 +145,7 @@ class TestFunctionLambdaHandler:
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "The provided value: 'invalid_loan_amount', must be convertible to a number"
+            'body': "Bad Request: The provided value: 'invalid_loan_amount', must be convertible to a number"
         }
 
         # Act
@@ -166,7 +166,7 @@ class TestFunctionLambdaHandler:
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "The provided value: 'invalid_property_value', must be convertible to a number"
+            'body': "Bad Request: The provided value: 'invalid_property_value', must be convertible to a number"
         }
 
         # Act
@@ -186,7 +186,7 @@ class TestFunctionLambdaHandler:
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "Missing value: 'property_value'"
+            'body': "Bad Request: Missing Value: 'property_value'"
         }
 
         # Act
@@ -206,7 +206,7 @@ class TestFunctionLambdaHandler:
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "Missing value: 'loan_amount'"
+            'body': "Bad Request: Missing Value: 'loan_amount'"
         }
 
         # Act

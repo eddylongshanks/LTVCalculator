@@ -10,7 +10,7 @@ def lambda_handler(event, context):
         loan_amount_raw = event['loan_amount']
         property_value_raw = event['property_value']
     except Exception as e:
-        return response_object(400, f"Missing value: {str(e)}")
+        return response_object(400, f"Bad Request: Missing Value: {str(e)}")
 
     try:
         loan_amount = float_conversion(loan_amount_raw)
@@ -29,7 +29,7 @@ def lambda_handler(event, context):
 
         return response_object(200, data)
     except Exception as e:
-        return response_object(400, str(e))
+        return response_object(400, f"Bad Request: {str(e)}")
 
 def float_conversion(value):
     """ Attempt to convert incoming value to a float """
