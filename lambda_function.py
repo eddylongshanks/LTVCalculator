@@ -1,5 +1,6 @@
 """ Lambda to consume the LTV Calculator """
 
+import json
 import os
 from LTVCalculator import LTVCalculator
 
@@ -7,10 +8,11 @@ def lambda_handler(event, context):
     """ Instantiate calculator and return values in a response object """
 
     try:
-        loan_amount_raw = event['loan_amount']
-        property_value_raw = event['property_value']
+        body = json.loads(event['body'])
+        loan_amount_raw = body['loan_amount']
+        property_value_raw = body['property_value']
     except Exception as e:
-        return context.fail(f"Bad Request: Missing Value: {str(e)}")
+        return response_object(400, f"Bad Request: Missing Value: {str(e)}")
 
     try:
         loan_amount = float_conversion(loan_amount_raw)
@@ -29,7 +31,7 @@ def lambda_handler(event, context):
 
         return response_object(200, data)
     except Exception as e:
-        return context.fail(f"Bad Request: {str(e)}")
+        return response_object(400, f"Bad Request: {str(e)}")
 
 def float_conversion(value):
     """ Attempt to convert incoming value to a float """
@@ -54,5 +56,8 @@ def response_object(status_code, message):
 
     return {
         'statusCode': status_code,
-        'body': message
+        'body': json.dumps(message),
+        'headers': {
+            'Content-Type': 'application/json',
+        }
     }
