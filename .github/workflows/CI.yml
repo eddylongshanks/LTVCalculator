@@ -33,7 +33,7 @@ jobs:
 
     - name: Run Tests (PyTest)
       run: pytest
-    
+
     - name: Linting Check (PyLint)
       run: pylint -j 0 lambda_function.py LTVCalculator.py
 
