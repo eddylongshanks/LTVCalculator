@@ -100,12 +100,12 @@ class TestFunctionLambdaHandler:
     """ Tests for the lambda_handler function """
 
     testdata = [
-            (100000, 100000, 100.0, False),
-            (75000, 100000, 75.0, False),
-            (50100, 100000, 50.1, False),
-            (49900, 100000, 49.9, True),
-            (30000, 100000, 30.0, True),
-            (100, 100000, 0.1, True),
+            (100000, 100000, 100.0, "false"),
+            (75000, 100000, 75.0, "false"),
+            (50100, 100000, 50.1, "false"),
+            (49900, 100000, 49.9, "true"),
+            (30000, 100000, 30.0, "true"),
+            (100, 100000, 0.1, "true"),
         ]
 
     @mock.patch.dict(os.environ, {"MAX_LTV": "50"})
@@ -114,17 +114,12 @@ class TestFunctionLambdaHandler:
         """ Parameterised Boundary Test based on max ltv of 50% """
 
         # Arrange
-        event = {
-            "loan_amount": loan, 
-            "property_value": prop
-        }
+        event = {"body": f"{{\"loan_amount\": {loan}, \"property_value\": {prop}}}"}
         context = 1
         expected = {
-            'statusCode': 200,
-            'body': {
-                'ltv_percentage': ltv, 
-                'is_acceptable': is_acceptable
-            }
+            'body': f'{{\"ltv_percentage\": {ltv}, \"is_acceptable\": {is_acceptable}}}',
+            'headers': {'Content-Type': 'application/json'},
+            'statusCode': 200
         }
 
         # Act
