@@ -1,4 +1,5 @@
 """ LTV Calculator v1.1 """
+# pylint: disable=invalid-name
 
 
 class LTVCalculator():

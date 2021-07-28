@@ -8,27 +8,27 @@ from unittest import mock
 class TestFunctionFloatConversion:
     """ Tests for the float_conversion function """
 
-    def test_float_conversion_WithTextString_ThrowsTypeErrorException(self):
+    def test_float_conversion_WithTextString_ThrowsValueErrorException(self):
         """ Text String """
 
         # Arrange
         test_value = "testtext"
 
         # Act
-        with pytest.raises(TypeError) as te:
+        with pytest.raises(ValueError) as te:
             result = lambda_function.float_conversion(test_value)
 
         # Assert
         assert str(te.value) == "The provided value: 'testtext', must be convertible to a number"
 
-    def test_float_conversion_WithNull_ThrowsTypeErrorException(self):
+    def test_float_conversion_WithNull_ThrowsValueErrorException(self):
         """ Test for Null """
 
         # Arrange
         test_value = None
 
         # Act
-        with pytest.raises(TypeError) as te:
+        with pytest.raises(ValueError) as te:
             result = lambda_function.float_conversion(test_value)
 
         # Assert
