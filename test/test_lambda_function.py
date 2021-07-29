@@ -128,20 +128,17 @@ class TestFunctionLambdaHandler:
         # Assert
         assert result == expected
 
-    @pytest.mark.skip(reason="need to mock 'context' object")
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
     def test_WithStringLoanAmount_ReturnsBadRequestWithInformativeErrorMessage(self):
         """ Invalid loan_amount value """
 
         # Arrange
-        event = {
-            "loan_amount": "invalid_loan_amount", 
-            "property_value": 100000
-        }
+        event = {"body": "{\"loan_amount\": \"invalid_loan_amount\", \"property_value\": 100000}"}
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "Bad Request: The provided value: 'invalid_loan_amount', must be convertible to a number"
+            'headers': {'Content-Type': 'application/json'},
+            'body': '"Bad Request: The provided value: \'invalid_loan_amount\', must be convertible to a number"'
         }
 
         # Act
@@ -150,20 +147,17 @@ class TestFunctionLambdaHandler:
         # Assert
         assert result == expected
 
-    @pytest.mark.skip(reason="need to mock 'context' object")
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
     def test_WithStringPropertyValue_ReturnsBadRequestWithInformativeErrorMessage(self):
         """ Invalid property_value value """
 
         # Arrange
-        event = {
-            "loan_amount": 40000, 
-            "property_value": "invalid_property_value"
-        }
+        event = {"body": "{\"loan_amount\": 40000, \"property_value\": \"invalid_property_value\"}"}
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "Bad Request: The provided value: 'invalid_property_value', must be convertible to a number"
+            'headers': {'Content-Type': 'application/json'},
+            'body': '"Bad Request: The provided value: \'invalid_property_value\', must be convertible to a number"'
         }
 
         # Act
@@ -172,19 +166,17 @@ class TestFunctionLambdaHandler:
         # Assert
         assert result == expected
 
-    @pytest.mark.skip(reason="need to mock 'context' object")
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
     def test_WithNoLoanAmount_ReturnsBadRequestWithInformativeErrorMessage(self):
         """ Missing loan_amount value """
 
         # Arrange
-        event = {
-            "loan_amount": 40000
-        }
+        event = {"body": "{\"loan_amount\": 40000}"}
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "Bad Request: Missing Value: 'property_value'"
+            'headers': {'Content-Type': 'application/json'},
+            'body': '"Bad Request: Missing Value: \'property_value\'"'
         }
 
         # Act
@@ -193,19 +185,17 @@ class TestFunctionLambdaHandler:
         # Assert
         assert result == expected
 
-    @pytest.mark.skip(reason="need to mock 'context' object")
     @mock.patch.dict(os.environ, {"MAX_LTV": "80"})
     def test_WithNoPropertyValue_ReturnsBadRequestWithInformativeErrorMessage(self):
         """ Missing property_value value """
 
         # Arrange
-        event = {
-            "property_value": 100000
-        }
+        event = {"body": "{\"property_value\": 100000}"}
         context = 1
         expected = {
             'statusCode': 400,
-            'body': "Bad Request: Missing Value: 'loan_amount'"
+            'headers': {'Content-Type': 'application/json'},
+            'body': '"Bad Request: Missing Value: \'loan_amount\'"'
         }
 
         # Act
