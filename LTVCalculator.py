@@ -1,4 +1,4 @@
-""" LTV Calculator v1.1  """
+""" LTV Calculator v1.2 """
 # pylint: disable=invalid-name
 
 
