@@ -39,10 +39,14 @@ Returns the following data:
 - Performs Safety Check
 - Performs Bandit Check (Excludes Unit Tests due to PyLint technique of using `assert`, creates false positive results)
 
-
 ### Main.yml:
 * Sets up Python v3.8
 * Runs Unit Tests
 * Creates zip file containing relevant code only
 * Configures AWS Credentials using GitHub Secrets
 * Uses AWS CLI to deploy directly to Lambda
+
+### Develop.yml:
+* Failed experiment, runs on merge to "develop" branch
+* Intended to push direct to a version of Lambda but seemingly impossible
+* ... requires research
